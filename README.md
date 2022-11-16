@@ -1,1 +1,1 @@
-# drop-pressure
+Kafka Streams application
