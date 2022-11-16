@@ -17,7 +17,7 @@ public class PressureDetectionProducer {
     public PressureDetectionProducer(KafkaTemplate<String, String> pressureDetectionProducer) {
         this.pressureDetectionProducer = pressureDetectionProducer;
     }
-    public void sendData() {
+    public void sendData() throws InterruptedException {
 
         System.out.println("Producer has been created...Start sending records ");
 
@@ -27,24 +27,25 @@ public class PressureDetectionProducer {
 
         List<Influx> influxList = readCSV.readInfluxFromCSVFile();
 
-        for (Influx influx : influxList) {
+        while(true)
+        {
+            for (Influx influx : influxList)
+            {
+                String message;
 
-            String message;
+                try
+                {
+                    message = om.writeValueAsString(influx);
 
-            try {
-
-                message = om.writeValueAsString(influx);
-
-                System.out.println("Sending " + message);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                    System.out.println("Sending " + message);
+                }
+                catch (JsonProcessingException e)
+                {
+                    throw new RuntimeException(e);
+                }
+                pressureDetectionProducer.send(new ProducerRecord<String, String>("influxNew-json", message));
+                Thread.sleep(50);
             }
-
-
-
-            pressureDetectionProducer.send(new ProducerRecord<String, String>("influxNew-json", message));
-
         }
-
     }
 }

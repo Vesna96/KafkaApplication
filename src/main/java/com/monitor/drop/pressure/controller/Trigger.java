@@ -16,7 +16,7 @@ public class Trigger {
     PressureDetectionService pressureDetectionService;
 
     @GetMapping(value = "/trigger")
-    public void send(){
+    public void send() throws InterruptedException {
         System.out.println("sent");
 
         pressureDetectionService.send();

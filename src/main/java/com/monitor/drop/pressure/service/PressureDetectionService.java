@@ -1,6 +1,5 @@
 package com.monitor.drop.pressure.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.monitor.drop.pressure.kafka.producer.PressureDetectionProducer;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,7 @@ public class PressureDetectionService {
         this.pressureDetectionProducer = pressureDetectionProducer;
     }
 
-    public void send() {
+    public void send() throws InterruptedException {
         pressureDetectionProducer.sendData();
     }
 
